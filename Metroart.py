@@ -148,6 +148,30 @@ def start(self):
                 input("Presiona Enter para volver al menú...")
 
 
+    elif opcion == "4":
+                obra_id = input("Ingrese el ID de la obra: ")
+                obra = self._obtener_obra_por_id_con_cache(int(obra_id))
+
+                if obra:
+                    print(f"\nTítulo: {obra.titulo}")
+                    print(f"Nombre del Artista: {obra.artista.nombre}")
+                    print(f"Nacionalidad del artista: {obra.artista.nacionalidad}")
+                    print(f"Fecha de nacimiento: {obra.artista.nacimiento}")
+                    print(f"Fecha de muerte: {obra.artista.muerte}")
+                    print(f"Tipo: {obra.clasificacion}")
+                    print(f"Año de creación: {obra.fecha_creacion}")
+                    print(f"Departamento: {obra.departamento.nombre}")
+
+                    if obra.imagen:
+                        ver_img = input("\n¿Deseas ver la imagen de la obra? (s/n): ").lower()
+                        if ver_img == 's':
+                            self._guardar_y_mostrar_imagen(obra.imagen, f"obra_{obra.id_obra}")
+                    else:
+                        print("\nNo hay imagen disponible para esta obra.")
+                    input("Presiona Enter para volver al menú...")
+                else:
+                    print("No se encontró la obra.")
+                    input("Presiona Enter para volver al menú...")
 
 
 
