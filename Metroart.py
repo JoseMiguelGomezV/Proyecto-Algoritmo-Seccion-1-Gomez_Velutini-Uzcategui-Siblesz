@@ -173,6 +173,82 @@ def start(self):
                     print("No se encontró la obra.")
                     input("Presiona Enter para volver al menú...")
 
+                  elif opcion == "5":
+                print("Saliendo del sistema...")
+                break
+            else:
+                print("Opción no válida.")
+
+    def _obtener_obra_por_id_con_cache(self, id_obra: int) -> Obra:
+        """
+        Obtiene una obra. Primero busca en la caché, si no la encuentra,
+        la pide a la API y la guarda en la caché para el futuro.
+        """
+        if id_obra in self.obras_cache:
+            print("(Obtenido desde la caché, más rápido!)")
+            return self.obras_cache[id_obra]
+        
+        datos_obra = obtener_objeto_por_id(id_obra)
+        if datos_obra:
+            return self._crear_objeto_obra_desde_datos(datos_obra)
+        return None
+
+    def _crear_objeto_obra_desde_datos(self, datos: dict) -> Obra:
+        """Método auxiliar para crear un objeto Obra a partir de un diccionario de datos de la API."""
+        artista = Artista(
+            nombre=datos.get('artistDisplayName', 'Desconocido'),
+            nacionalidad=datos.get('artistNationality', 'Desconocida'),
+            nacimiento=datos.get('artistBeginDate', 'N/A'),
+            muerte=datos.get('artistEndDate', 'N/A')
+        )
+        departamento = Departamento(
+            id_departamento=datos.get('department', 'N/A'),
+            nombre=datos.get('department', 'Desconocido')
+        )
+        id_obra = datos.get('objectID')
+        obra = Obra(
+            id_obra=id_obra,
+            titulo=datos.get('title', 'Sin Título'),
+            artista=artista,
+            clasificacion=datos.get('classification', 'No clasificado'),
+            fecha_creacion=datos.get('objectDate', 'Desconocida'),
+            imagen=datos.get('primaryImageSmall', ''),
+            departamento=departamento
+        )
+        if id_obra:
+            self.obras_cache[id_obra] = obra
+        return obra
+
+    def _guardar_y_mostrar_imagen(self, url: str, nombre_base_archivo: str):
+        """
+        Descarga una imagen desde una URL, la guarda en un archivo y luego la muestra.
+        """
+        print("Descargando imagen...")
+        try:
+            response = requests.get(url, stream=True, timeout=15)
+            response.raise_for_status()
+
+            content_type = response.headers.get('Content-Type')
+            extension = '.jpg'
+            if content_type and 'image/png' in content_type:
+                extension = '.png'
+            
+            nombre_archivo_final = f"{nombre_base_archivo}{extension}"
+
+            with open(nombre_archivo_final, 'wb') as file:
+                for chunk in response.iter_content(chunk_size=8192):
+                    file.write(chunk)
+            
+            print(f"Imagen guardada exitosamente como '{nombre_archivo_final}'")
+            img = Image.open(nombre_archivo_final)
+            img.show()
+        except requests.exceptions.RequestException as e:
+            print(f"Error al hacer el request: {e}")
+        except IOError as e:
+            print(f"Error al escribir o abrir el archivo de imagen: {e}")
+        except Exception as e:
+            print(f"Ocurrió un error inesperado al mostrar la imagen: {e}") #p
+
 
 
 
