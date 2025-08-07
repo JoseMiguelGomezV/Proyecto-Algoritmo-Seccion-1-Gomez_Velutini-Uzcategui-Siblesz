@@ -75,6 +75,14 @@ def start(self):
               break
       input("Presiona Enter para volver al menu...")
 
+    elif opcion == "2":
+      if self.nacionalidades:
+        print("Lista de nacionalidades: ")
+        for n in self.nacionalidades:
+          print(n)
+        
+      
+
 
 
 
