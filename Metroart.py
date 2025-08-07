@@ -74,4 +74,49 @@ def start(self):
           if mas.lower() != 's':
               break
       input("Presiona Enter para volver al menu...")
+
+
+
+
+
+
+      elif opcion == "3":
+                nombre = input("Ingrese el nombre del autor: ")
+                ids = buscar_objetos(nombre)
+                if not ids:
+                    print("No se encontraron obras para ese autor.")
+                    return
+                cargadas = 0
+                while cargadas < len(ids):
+                    print("\nMostrando 5 obras:")
+                    mostradas = 0
+                    for i in range(cargadas, len(ids)):
+                        datos = obtener_objeto_por_id(ids[i])
+                        if datos and nombre.lower() in datos.get('artistDisplayName','').lower():
+                            obra = self._crear_objeto_obra_desde_datos(datos)
+                            print("ID:", obra.id_obra, ", Título:", obra.titulo, ", Autor:", obra.artista.nombre)
+                            mostradas += 1
+                        if mostradas == 5:
+                            break
+                    if mostradas == 0:
+                        print("Ya se mostraron todas las obras disponibles.")
+                        break
+                    cargadas += mostradas
+                    if cargadas >= len(ids):
+                        print("\nNo hay más obras que mostrar para este autor.")
+                        print("Ya se mostraron todas las obras disponibles.")
+                        break
+                    mas = input("¿Desea ver otras 5 obras? (s/n): ")
+                    if mas.lower() != 's':
+                        break
+                input("Presiona Enter para volver al menú...")
+
+
+
+
+
+
+
+
+
       
