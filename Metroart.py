@@ -41,6 +41,7 @@ def start(self):
     print("5. Salir")
     opcion = input("Seleccione una opcion: ")
 
+    
     if opcion == "1":
       print("Lista de departamentos disponibles:")
       for depto in self.departamentos:
@@ -75,6 +76,7 @@ def start(self):
               break
       input("Presiona Enter para volver al menu...")
 
+    
     elif opcion == "2":
       if self.nacionalidades:
         print("Lista de nacionalidades: ")
@@ -82,8 +84,7 @@ def start(self):
           print(n)
       else:
         print("No se pudo obtener la lista de nacionalidades.")
-
-      nacionalidades_lower = [n.lower() for n in self.nacionalidades]
+                nacionalidades_lower = [n.lower() for n in self.nacionalidades]
 
                 nacionalidad = input("Ingrese la nacionalidad: ")
                 if nacionalidad.lower() not in nacionalidades_lower:
@@ -113,7 +114,6 @@ def start(self):
                     if mas.lower() != 's':
                         break
                 input("Presiona Enter para volver al menú...")
-
       
 
     elif opcion == "3":
@@ -172,20 +172,22 @@ def start(self):
                 else:
                     print("No se encontró la obra.")
                     input("Presiona Enter para volver al menú...")
+                  
 
-                  elif opcion == "5":
+      elif opcion == "5":
                 print("Saliendo del sistema...")
                 break
             else:
-                print("Opción no válida.")
+                print("Opción no válida.")      
+              
 
     def _obtener_obra_por_id_con_cache(self, id_obra: int) -> Obra:
         """
-        Obtiene una obra. Primero busca en la caché, si no la encuentra,
+        Obtiene una obra. Primero busca en el caché, si no la encuentra,
         la pide a la API y la guarda en la caché para el futuro.
         """
         if id_obra in self.obras_cache:
-            print("(Obtenido desde la caché, más rápido!)")
+            print("(Obtenido desde la caché)")
             return self.obras_cache[id_obra]
         
         datos_obra = obtener_objeto_por_id(id_obra)
@@ -193,8 +195,9 @@ def start(self):
             return self._crear_objeto_obra_desde_datos(datos_obra)
         return None
 
+    
     def _crear_objeto_obra_desde_datos(self, datos: dict) -> Obra:
-        """Método auxiliar para crear un objeto Obra a partir de un diccionario de datos de la API."""
+        """Método auxiliar para crear un objeto con los datos de una obra a partir de un diccionario de datos de la API."""
         artista = Artista(
             nombre=datos.get('artistDisplayName', 'Desconocido'),
             nacionalidad=datos.get('artistNationality', 'Desconocida'),
@@ -219,35 +222,7 @@ def start(self):
             self.obras_cache[id_obra] = obra
         return obra
 
-    def _guardar_y_mostrar_imagen(self, url: str, nombre_base_archivo: str):
-        """
-        Descarga una imagen desde una URL, la guarda en un archivo y luego la muestra.
-        """
-        print("Descargando imagen...")
-        try:
-            response = requests.get(url, stream=True, timeout=15)
-            response.raise_for_status()
 
-            content_type = response.headers.get('Content-Type')
-            extension = '.jpg'
-            if content_type and 'image/png' in content_type:
-                extension = '.png'
-            
-            nombre_archivo_final = f"{nombre_base_archivo}{extension}"
-
-            with open(nombre_archivo_final, 'wb') as file:
-                for chunk in response.iter_content(chunk_size=8192):
-                    file.write(chunk)
-            
-            print(f"Imagen guardada exitosamente como '{nombre_archivo_final}'")
-            img = Image.open(nombre_archivo_final)
-            img.show()
-        except requests.exceptions.RequestException as e:
-            print(f"Error al hacer el request: {e}")
-        except IOError as e:
-            print(f"Error al escribir o abrir el archivo de imagen: {e}")
-        except Exception as e:
-            print(f"Ocurrió un error inesperado al mostrar la imagen: {e}") #p
 
 
 
