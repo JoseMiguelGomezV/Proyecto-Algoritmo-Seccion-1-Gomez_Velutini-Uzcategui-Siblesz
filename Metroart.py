@@ -77,25 +77,25 @@ def start(self):
       input("Presiona Enter para volver al menu...")
 
     
-    elif opcion == "2":
+     elif opcion == "2":
       if self.nacionalidades:
         print("Lista de nacionalidades: ")
         for n in self.nacionalidades:
           print(n)
       else:
         print("No se pudo obtener la lista de nacionalidades.")
-                nacionalidades_lower = [n.lower() for n in self.nacionalidades]
+        nacionalidades_lower = [n.lower() for n in self.nacionalidades]
 
-                nacionalidad = input("Ingrese la nacionalidad: ")
-                if nacionalidad.lower() not in nacionalidades_lower:
+        nacionalidad = input("Ingrese la nacionalidad: ")
+        if nacionalidad.lower() not in nacionalidades_lower:
                     print("Nacionalidad no válida.")
                     return
-                ids = buscar_objetos(nacionalidad)
-                if not ids:
+        ids = buscar_objetos(nacionalidad)
+        if not ids:
                     print("No hay obras para esta nacionalidad")
                     return
-                cargadas = 0
-                while cargadas < len(ids):
+        cargadas = 0
+        while cargadas < len(ids):
                     print("\nMostrando 20 obras:")
                     mostradas = 0
                     for i in range(cargadas, len(ids)):
@@ -113,7 +113,7 @@ def start(self):
                     mas = input("¿Desea ver otras 20 obras? (s/n): ")
                     if mas.lower() != 's':
                         break
-                input("Presiona Enter para volver al menú...")
+        input("Presiona Enter para volver al menú...")
       
 
     elif opcion == "3":
@@ -174,11 +174,11 @@ def start(self):
                     input("Presiona Enter para volver al menú...")
                   
 
-      elif opcion == "5":
+  elif opcion == "5":
                 print("Saliendo del sistema...")
                 break
-            else:
-                print("Opción no válida.")      
+  else:
+                print("Opción no válida.") 
               
 
     def _obtener_obra_por_id_con_cache(self, id_obra: int) -> Obra:
