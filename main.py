@@ -1,4 +1,4 @@
-from metroart import MetroArt
+from Metroart import MetroArt
 
 def main():
     sistema = MetroArt()
