@@ -77,7 +77,7 @@ def start(self):
       input("Presiona Enter para volver al menu...")
 
     
-     elif opcion == "2":
+    elif opcion == "2":
       if self.nacionalidades:
         print("Lista de nacionalidades: ")
         for n in self.nacionalidades:
@@ -174,14 +174,14 @@ def start(self):
                     input("Presiona Enter para volver al menú...")
                   
 
-  elif opcion == "5":
+   elif opcion == "5":
                 print("Saliendo del sistema...")
                 break
-  else:
+   else:
                 print("Opción no válida.") 
               
 
-    def _obtener_obra_por_id_con_cache(self, id_obra: int) -> Obra:
+   def _obtener_obra_por_id_con_cache(self, id_obra: int) -> Obra:
         """
         Obtiene una obra. Primero busca en el caché, si no la encuentra,
         la pide a la API y la guarda en la caché para el futuro.
@@ -196,7 +196,7 @@ def start(self):
         return None
 
     
-    def _crear_objeto_obra_desde_datos(self, datos: dict) -> Obra:
+   def _crear_objeto_obra_desde_datos(self, datos: dict) -> Obra:
         """Método auxiliar para crear un objeto con los datos de una obra a partir de un diccionario de datos de la API."""
         artista = Artista(
             nombre=datos.get('artistDisplayName', 'Desconocido'),
@@ -223,6 +223,41 @@ def start(self):
         return obra
 
 
+   def _guardar_y_mostrar_imagen(self, url: str, nombre_base_archivo: str):
+        """
+        Descarga una imagen desde una URL y la guarda en un archivo, optamos por mostrarla.
+        """
+        print("Descargando imagen...")
+        try:
+            response = requests.get(url, stream=True)
+            response.raise_for_status()
+
+            content_type = response.headers.get('Content-Type')
+            extension = '.png'  
+            if content_type:
+                if 'image/png' in content_type:
+                    extension = '.png'
+                elif 'image/jpeg' in content_type:
+                    extension = '.jpg'
+                elif 'image/svg+xml' in content_type:
+                    extension = '.svg'
+
+            nombre_archivo_final = f"{nombre_base_archivo}{extension}"
+
+            with open(nombre_archivo_final, 'wb') as file:
+                for chunk in response.iter_content(chunk_size=8192):
+                    file.write(chunk)
+            print(f"Imagen guardada exitosamente como '{nombre_archivo_final}'")
+
+        except requests.exceptions.RequestException as e:
+            print(f"Error al hacer el request: {e}")
+            return None
+        except IOError as e:
+            print(f"Error al escribir el archivo: {e}")
+            return None
+
+        img = Image.open(nombre_archivo_final)
+        img.show()
 
 
 
