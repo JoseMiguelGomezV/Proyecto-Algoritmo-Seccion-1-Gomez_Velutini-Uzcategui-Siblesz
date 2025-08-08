@@ -7,95 +7,93 @@ from Artista import Artista
 from Departamento import Departamento
 
 class MetroArt:
-  """
-  clase principal que gestiona la interaccion con el catalogo de arte
-  """
+    """
+    clase principal que gestiona la interaccion con el catalogo de arte
+    """
 
-def __init__(self):
-  self.departamentos = []
-  self.nacionalidades = []
-  self.obras_cache = {}
+    def __init__(self):
+        self.departamentos = []
+        self.nacionalidades = []
+        self.obras_cache = {}
 
-def start(self):
-  print("Bienvenido al sistema MetroArt")
-  print("Cargando departamentos...")
-  deptos_dict = obtener_departamentos()
-  if deptos_dict is None:
-    print("No se pudieron cargar los departamentos")
-    self.departamentos = []
-  else:
-    self.departamentos = [Departamento(d['departmentId'], d['displayName']) for d in deptos_dict]
-    print(f"Departamentos encontrados: {len(self.departamentos)}")
+    def start(self):
+        print("Bienvenido al sistema MetroArt")
+        print("Cargando departamentos...")
+        deptos_dict = obtener_departamentos()
+        if deptos_dict is None:
+            print("No se pudieron cargar los departamentos")
+            self.departamentos = []
+        else:
+            self.departamentos = [Departamento(d['departmentId'], d['displayName']) for d in deptos_dict]
+            print(f"Departamentos encontrados: {len(self.departamentos)}")
 
-  print("Cargando nacionalidades...")
-  url_nacionalidades = get_url_nacionalidades()
-  self.nacionalidades = obtener_contenido_nacionalidades(url_nacionalidades)
-  print("Sistema listo para usar")
+        print("Cargando nacionalidades...")
+        url_nacionalidades = get_url_nacionalidades()
+        self.nacionalidades = obtener_contenido_nacionalidades(url_nacionalidades)
+        print("Sistema listo para usar")
 
-  while True:
-    print("\nOpciones:")
-    print("1. Buscar obras por departamento")
-    print("2. Buscar obras por nacionalidad del autor")
-    print("3. Buscar obras por nombre del autor")
-    print("4. Mostrar detalles de una obra por ID")
-    print("5. Salir")
-    opcion = input("Seleccione una opcion: ")
+        while True:
+            print("\nOpciones:")
+            print("1. Buscar obras por departamento")
+            print("2. Buscar obras por nacionalidad del autor")
+            print("3. Buscar obras por nombre del autor")
+            print("4. Mostrar detalles de una obra por ID")
+            print("5. Salir")
+            opcion = input("Seleccione una opcion: ")
 
-    
-    if opcion == "1":
-      print("Lista de departamentos disponibles:")
-      for depto in self.departamentos:
-          print(f"{depto.id_departamento}: {depto.nombre}")
-      dept_id = input("Ingrese el ID del departamento: ")
-      depto_nombre = None
-      for d in self.departamentos:
-          if str(d.id_departamento) == dept_id:
-              depto_nombre = d.nombre
-              break
-      if not depto_nombre:
-          print("ID de departamento no valido")
-          return
-      ids = buscar_objetos(depto_nombre)
-      if not ids:
-          print("No se encontraron obras para ese departamento")
-          return
-      cargadas = 0
-      while cargadas < len(ids):
-          print("\nMostrando 20 obras:")
-          for i in range(cargadas, min(cargadas + 20, len(ids))):
-              datos = obtener_objeto_por_id(ids[i])
-              if datos:
-                  obra = self._crear_objeto_obra_desde_datos(datos)
-                  print("ID:", obra.id_obra, ", Titulo:", obra.titulo, ", Autor:", obra.artista.nombre)
-          cargadas += 20
-          if cargadas >= len(ids):
-              print("\nNo hay mas obras que mostrar para este departamento")
-              break
-          mas = input("¿Desea ver otras 20 obras? (s/n): ")
-          if mas.lower() != 's':
-              break
-      input("Presiona Enter para volver al menu...")
+            if opcion == "1":
+                print("Lista de departamentos disponibles:")
+                for depto in self.departamentos:
+                    print(f"{depto.id_departamento}: {depto.nombre}")
+                dept_id = input("Ingrese el ID del departamento: ")
+                depto_nombre = None
+                for d in self.departamentos:
+                    if str(d.id_departamento) == dept_id:
+                        depto_nombre = d.nombre
+                        break
+                if not depto_nombre:
+                    print("ID de departamento no valido")
+                    return
+                ids = buscar_objetos(depto_nombre)
+                if not ids:
+                    print("No se encontraron obras para ese departamento")
+                    return
+                cargadas = 0
+                while cargadas < len(ids):
+                    print("\nMostrando 20 obras:")
+                    for i in range(cargadas, min(cargadas + 20, len(ids))):
+                        datos = obtener_objeto_por_id(ids[i])
+                        if datos:
+                            obra = self._crear_objeto_obra_desde_datos(datos)
+                            print("ID:", obra.id_obra, ", Titulo:", obra.titulo, ", Autor:", obra.artista.nombre)
+                    cargadas += 20
+                    if cargadas >= len(ids):
+                        print("\nNo hay mas obras que mostrar para este departamento")
+                        break
+                    mas = input("¿Desea ver otras 20 obras? (s/n): ")
+                    if mas.lower() != 's':
+                        break
+                input("Presiona Enter para volver al menu...")
 
-    
-    elif opcion == "2":
-      if self.nacionalidades:
-        print("Lista de nacionalidades: ")
-        for n in self.nacionalidades:
-          print(n)
-      else:
-        print("No se pudo obtener la lista de nacionalidades.")
-        nacionalidades_lower = [n.lower() for n in self.nacionalidades]
+            elif opcion == "2":
+                if self.nacionalidades:
+                    print("Lista de nacionalidades: ")
+                    for n in self.nacionalidades:
+                        print(n)
+                else:
+                    print("No se pudo obtener la lista de nacionalidades.")
+                nacionalidades_lower = [n.lower() for n in self.nacionalidades]
 
-        nacionalidad = input("Ingrese la nacionalidad: ")
-        if nacionalidad.lower() not in nacionalidades_lower:
+                nacionalidad = input("Ingrese la nacionalidad: ")
+                if nacionalidad.lower() not in nacionalidades_lower:
                     print("Nacionalidad no válida.")
                     return
-        ids = buscar_objetos(nacionalidad)
-        if not ids:
+                ids = buscar_objetos(nacionalidad)
+                if not ids:
                     print("No hay obras para esta nacionalidad")
                     return
-        cargadas = 0
-        while cargadas < len(ids):
+                cargadas = 0
+                while cargadas < len(ids):
                     print("\nMostrando 20 obras:")
                     mostradas = 0
                     for i in range(cargadas, len(ids)):
@@ -113,10 +111,9 @@ def start(self):
                     mas = input("¿Desea ver otras 20 obras? (s/n): ")
                     if mas.lower() != 's':
                         break
-        input("Presiona Enter para volver al menú...")
-      
+                input("Presiona Enter para volver al menú...")
 
-    elif opcion == "3":
+            elif opcion == "3":
                 nombre = input("Ingrese el nombre del autor: ")
                 ids = buscar_objetos(nombre)
                 if not ids:
@@ -147,8 +144,7 @@ def start(self):
                         break
                 input("Presiona Enter para volver al menú...")
 
-
-    elif opcion == "4":
+            elif opcion == "4":
                 obra_id = input("Ingrese el ID de la obra: ")
                 obra = self._obtener_obra_por_id_con_cache(int(obra_id))
 
@@ -172,14 +168,12 @@ def start(self):
                 else:
                     print("No se encontró la obra.")
                     input("Presiona Enter para volver al menú...")
-                  
 
-    elif opcion == "5":
+            elif opcion == "5":
                 print("Saliendo del sistema...")
                 break
-    else:
-                print("Opción no válida.") 
-              
+            else:
+                print("Opción no válida.")
 
     def _obtener_obra_por_id_con_cache(self, id_obra: int) -> Obra:
         """
@@ -189,13 +183,12 @@ def start(self):
         if id_obra in self.obras_cache:
             print("(Obtenido desde la caché)")
             return self.obras_cache[id_obra]
-        
+
         datos_obra = obtener_objeto_por_id(id_obra)
         if datos_obra:
             return self._crear_objeto_obra_desde_datos(datos_obra)
         return None
 
-    
     def _crear_objeto_obra_desde_datos(self, datos: dict) -> Obra:
         """Método auxiliar para crear un objeto con los datos de una obra a partir de un diccionario de datos de la API."""
         artista = Artista(
@@ -221,7 +214,6 @@ def start(self):
         if id_obra:
             self.obras_cache[id_obra] = obra
         return obra
-
 
     def _guardar_y_mostrar_imagen(self, url: str, nombre_base_archivo: str):
         """
@@ -258,11 +250,3 @@ def start(self):
 
         img = Image.open(nombre_archivo_final)
         img.show()
-
-
-
-
-
-
-
-      
