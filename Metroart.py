@@ -44,7 +44,7 @@ class MetroArt:
             if opcion == "1":
                 print("Lista de departamentos disponibles:")
                 for depto in self.departamentos:
-                    print(f"{depto.id_departamento}: {depto.nombre}")
+                    depto.show()
                 dept_id = input("Ingrese el ID del departamento: ")
                 depto_nombre = None
                 for d in self.departamentos:
@@ -65,7 +65,7 @@ class MetroArt:
                         datos = obtener_objeto_por_id(ids[i])
                         if datos:
                             obra = self._crear_objeto_obra_desde_datos(datos)
-                            print("ID:", obra.id_obra, ", Titulo:", obra.titulo, ", Autor:", obra.artista.nombre)
+                            obra.show_resumen()
                     cargadas += 20
                     if cargadas >= len(ids):
                         print("\nNo hay mas obras que mostrar para este departamento")
@@ -100,7 +100,7 @@ class MetroArt:
                         datos = obtener_objeto_por_id(ids[i])
                         if datos and datos.get('artistNationality','').lower() == nacionalidad.lower():
                             obra = self._crear_objeto_obra_desde_datos(datos)
-                            print("ID:", obra.id_obra, ", Título:", obra.titulo, ", Autor:", obra.artista.nombre)
+                            obra.show_resumen()
                             mostradas += 1
                         if mostradas == 20:
                             break
@@ -127,7 +127,7 @@ class MetroArt:
                         datos = obtener_objeto_por_id(ids[i])
                         if datos and nombre.lower() in datos.get('artistDisplayName','').lower():
                             obra = self._crear_objeto_obra_desde_datos(datos)
-                            print("ID:", obra.id_obra, ", Título:", obra.titulo, ", Autor:", obra.artista.nombre)
+                            obra.show_resumen()
                             mostradas += 1
                         if mostradas == 5:
                             break
@@ -149,14 +149,7 @@ class MetroArt:
                 obra = self._obtener_obra_por_id_con_cache(int(obra_id))
 
                 if obra:
-                    print(f"\nTítulo: {obra.titulo}")
-                    print(f"Nombre del Artista: {obra.artista.nombre}")
-                    print(f"Nacionalidad del artista: {obra.artista.nacionalidad}")
-                    print(f"Fecha de nacimiento: {obra.artista.nacimiento}")
-                    print(f"Fecha de muerte: {obra.artista.muerte}")
-                    print(f"Tipo: {obra.clasificacion}")
-                    print(f"Año de creación: {obra.fecha_creacion}")
-                    print(f"Departamento: {obra.departamento.nombre}")
+                    obra.show_detalles()
 
                     if obra.imagen:
                         ver_img = input("\n¿Deseas ver la imagen de la obra? (s/n): ").lower()
