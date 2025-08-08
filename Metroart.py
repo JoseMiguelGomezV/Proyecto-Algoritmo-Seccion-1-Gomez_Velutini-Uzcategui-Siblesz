@@ -8,7 +8,7 @@ from Departamento import Departamento
 
 class MetroArt:
     """
-    clase principal que gestiona la interaccion con el catalogo de arte
+    Clase principal que maneja el catálogo de arte y su uso.
     """
 
     def __init__(self):
@@ -168,7 +168,7 @@ class MetroArt:
             else:
                 print("Opción no válida.")
 
-    def _obtener_obra_por_id_con_cache(self, id_obra: int) -> Obra:
+    def _obtener_obra_por_id_con_cache(self, id_obra: int):
         """
         Obtiene una obra. Primero busca en el caché, si no la encuentra,
         la pide a la API y la guarda en la caché para el futuro.
@@ -182,7 +182,7 @@ class MetroArt:
             return self._crear_objeto_obra_desde_datos(datos_obra)
         return None
 
-    def _crear_objeto_obra_desde_datos(self, datos: dict) -> Obra:
+    def _crear_objeto_obra_desde_datos(self, datos: dict):
         """Método auxiliar para crear un objeto con los datos de una obra a partir de un diccionario de datos de la API."""
         artista = Artista(
             nombre=datos.get('artistDisplayName', 'Desconocido'),
